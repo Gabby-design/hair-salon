@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getStoredServices } from '../utils/serviceStore';
 import { Clock, ArrowRight } from 'lucide-react';
 
@@ -14,6 +15,10 @@ export default function ServicesPage() {
   const filteredServices = activeCategory === 'all'
     ? services
     : services.filter(s => s.category === activeCategory);
+
+  const handleBookClick = (title) => {
+    toast.info(`Selected "${title}" for booking!`);
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-16 bg-background space-y-12">
@@ -105,6 +110,7 @@ export default function ServicesPage() {
               <span className="text-xs font-semibold text-[#1C1917]">Available 24/7 in Wuse, Abuja</span>
               <Link
                 to={`/book?service=${svc.id}`}
+                onClick={() => handleBookClick(svc.title)}
                 className="text-xs font-semibold text-white bg-[#1C1917] hover:bg-stone-800 px-4 py-2 rounded-full flex items-center gap-1 shadow-xs"
               >
                 <span>Book This Service</span>

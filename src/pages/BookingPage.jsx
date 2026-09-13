@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getStoredServices } from '../utils/serviceStore';
 import { Sparkles, Clock, CheckCircle2, Wand2, ArrowRight, ListFilter, Check } from 'lucide-react';
 
@@ -43,18 +44,21 @@ export default function BookingPage() {
   const handleSelectService = (svc) => {
     setSelectedServiceId(svc.id);
     setFormData((prev) => ({ ...prev, service: svc.title }));
+    toast.info(`Selected service: ${svc.title}`);
   };
 
   const handleAutoFill = () => {
+    const targetTitle = selectedServiceObj ? selectedServiceObj.title : 'Precision Cuts & Custom Styling';
     setFormData({
       name: 'Olamide',
       phone: '0817 344 5612',
       email: 'olamide@example.com',
-      service: selectedServiceObj ? selectedServiceObj.title : 'Precision Cuts & Custom Styling',
+      service: targetTitle,
       date: tomorrowStr,
       time: '14:00',
       notes: 'Custom silk press & scalp hydration session. Please confirm via WhatsApp.',
     });
+    toast.info('Details pre-filled for Olamide!');
   };
 
   const handleChange = (e) => {
@@ -66,6 +70,7 @@ export default function BookingPage() {
     e.preventDefault();
     console.log('Booking Submitted:', formData);
     setSubmitted(true);
+    toast.success(`Appointment booked for ${formData.service}! We will confirm your visit shortly.`);
   };
 
   const whatsappMessage = encodeURIComponent(

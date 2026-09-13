@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import {
   getStoredServices,
   addService,
@@ -13,7 +14,6 @@ const OWNER_PASSCODE = 'hairmasters2026';
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
-  const [authError, setAuthError] = useState(false);
 
   const [services, setServices] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -29,8 +29,6 @@ export default function AdminPage() {
     details: '',
   });
 
-  const [message, setMessage] = useState('');
-
   useEffect(() => {
     const isAuth = sessionStorage.getItem('hair_masters_owner_auth') === 'true';
     if (isAuth) {
@@ -44,10 +42,10 @@ export default function AdminPage() {
     if (passcode === OWNER_PASSCODE) {
       sessionStorage.setItem('hair_masters_owner_auth', 'true');
       setIsAuthenticated(true);
-      setAuthError(false);
       setServices(getStoredServices());
+      toast.success('Welcome back! Owner Admin Portal unlocked.');
     } else {
-      setAuthError(true);
+      toast.error('Incorrect owner passcode. Please try again.');
     }
   };
 
@@ -55,11 +53,7 @@ export default function AdminPage() {
     sessionStorage.removeItem('hair_masters_owner_auth');
     setIsAuthenticated(false);
     setPasscode('');
-  };
-
-  const flashMessage = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(''), 3000);
+    toast.info('Owner Admin Portal locked.');
   };
 
   const handleEditStart = (svc) => {
@@ -76,14 +70,14 @@ export default function AdminPage() {
     const updated = updateService(id, editForm);
     setServices(updated);
     setEditingId(null);
-    flashMessage('Service updated successfully!');
+    toast.success(`Service "${editForm.title}" updated successfully!`);
   };
 
   const handleDelete = (id, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
       const updated = deleteService(id);
       setServices(updated);
-      flashMessage(`"${title}" has been deleted.`);
+      toast.warn(`Service "${title}" deleted from menu.`);
     }
   };
 
@@ -93,6 +87,7 @@ export default function AdminPage() {
     const updated = addService(newForm);
     setServices(updated);
     setShowAddForm(false);
+    const addedTitle = newForm.title;
     setNewForm({
       title: '',
       category: 'cuts',
@@ -101,14 +96,14 @@ export default function AdminPage() {
       description: '',
       details: '',
     });
-    flashMessage('New service added!');
+    toast.success(`Service "${addedTitle}" created & published!`);
   };
 
   const handleReset = () => {
     if (window.confirm('Reset all services to default menu? Custom changes will be restored.')) {
       const updated = resetServicesToDefault();
       setServices(updated);
-      flashMessage('Services restored to default.');
+      toast.info('Salon services restored to default menu.');
     }
   };
 
@@ -147,12 +142,6 @@ export default function AdminPage() {
                 <KeyRound className="w-4 h-4 text-stone-400 absolute right-3 top-3.5" />
               </div>
             </div>
-
-            {authError && (
-              <p className="text-xs font-semibold text-red-600">
-                Incorrect passcode. Please try again.
-              </p>
-            )}
 
             <button
               type="submit"
@@ -217,14 +206,6 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
-
-      {/* Success Notification */}
-      {message && (
-        <div className="p-4 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-sm font-semibold flex items-center gap-2 animate-fadeIn">
-          <Check className="w-5 h-5 text-emerald-700" />
-          <span>{message}</span>
-        </div>
-      )}
 
       {/* Add New Service Form */}
       {showAddForm && (
