@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Settings } from 'lucide-react';
 
 export default function Footer() {
   const navLinks = [
@@ -28,10 +27,6 @@ export default function Footer() {
               {link.name}
             </Link>
           ))}
-          <Link to="/admin" className="text-rose font-semibold flex items-center gap-1 hover:underline">
-            <Settings className="w-3.5 h-3.5" />
-            <span>Owner Portal</span>
-          </Link>
         </nav>
 
         {/* Copyright */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getStoredServices } from '../utils/serviceStore';
-import { Clock, Settings, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight } from 'lucide-react';
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -32,17 +32,10 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/admin"
-            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#1C1917] border border-stone-300 rounded-full hover:border-rose"
-          >
-            <Settings className="w-3.5 h-3.5 text-rose" />
-            <span>Owner Edit Portal</span>
-          </Link>
+        <div>
           <Link
             to="/book"
-            className="rounded-full bg-[#1C1917] px-6 py-2.5 text-xs font-semibold text-white hover:opacity-90"
+            className="rounded-full bg-[#1C1917] px-6 py-2.5 text-xs font-semibold text-white hover:opacity-90 inline-block"
           >
             Reserve a chair →
           </Link>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Menu, X, Settings } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,17 +39,8 @@ export default function Navigation() {
           ))}
         </nav>
 
-        {/* Action Button & Owner Link */}
+        {/* Action Button & Mobile Toggle */}
         <div className="flex items-center gap-3">
-          <Link
-            to="/admin"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#1C1917] hover:text-rose transition-colors px-3 py-1.5 rounded-full border border-stone-300 hover:border-rose"
-            title="Owner Service Portal"
-          >
-            <Settings className="w-3.5 h-3.5 text-rose" />
-            <span>Owner Portal</span>
-          </Link>
-
           <Link
             to="/book"
             className="rounded-full bg-[#1C1917] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 shadow-xs sm:px-5"
@@ -85,16 +76,6 @@ export default function Navigation() {
               {link.name}
             </NavLink>
           ))}
-          <div className="pt-2">
-            <Link
-              to="/admin"
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center gap-2 text-xs font-semibold text-rose py-2"
-            >
-              <Settings className="w-4 h-4" />
-              <span>Owner Admin Portal (Edit Services)</span>
-            </Link>
-          </div>
         </div>
       )}
     </header>

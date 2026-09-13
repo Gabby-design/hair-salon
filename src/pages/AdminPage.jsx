@@ -6,9 +6,15 @@ import {
   deleteService,
   resetServicesToDefault,
 } from '../utils/serviceStore';
-import { Plus, Edit2, Trash2, RotateCcw, Check, Save, Shield, Settings } from 'lucide-react';
+import { Plus, Edit2, Trash2, RotateCcw, Check, Save, Lock, LogOut, KeyRound } from 'lucide-react';
+
+const OWNER_PASSCODE = 'hairmasters2026';
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passcode, setPasscode] = useState('');
+  const [authError, setAuthError] = useState(false);
+
   const [services, setServices] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ title: '', price: '', duration: '', description: '' });
@@ -26,8 +32,30 @@ export default function AdminPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    setServices(getStoredServices());
+    const isAuth = sessionStorage.getItem('hair_masters_owner_auth') === 'true';
+    if (isAuth) {
+      setIsAuthenticated(true);
+      setServices(getStoredServices());
+    }
   }, []);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (passcode === OWNER_PASSCODE) {
+      sessionStorage.setItem('hair_masters_owner_auth', 'true');
+      setIsAuthenticated(true);
+      setAuthError(false);
+      setServices(getStoredServices());
+    } else {
+      setAuthError(true);
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('hair_masters_owner_auth');
+    setIsAuthenticated(false);
+    setPasscode('');
+  };
 
   const flashMessage = (msg) => {
     setMessage(msg);
@@ -84,6 +112,65 @@ export default function AdminPage() {
     }
   };
 
+  /* Passcode Protected Lock Screen */
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center bg-background px-6 py-16">
+        <div className="w-full max-w-md bg-card p-8 rounded-3xl border border-stone-300 shadow-xl space-y-6 text-center">
+          <div className="w-14 h-14 bg-rose/20 text-rose rounded-full flex items-center justify-center mx-auto border border-rose/30">
+            <Lock className="w-7 h-7" />
+          </div>
+
+          <div>
+            <h1 className="font-serif text-3xl text-[#1C1917] font-normal">
+              Owner Access Required
+            </h1>
+            <p className="mt-2 text-xs font-medium text-[#1C1917] leading-relaxed">
+              This area is restricted exclusively to the salon owner. Please enter your private owner passcode to manage services.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4 text-left">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1">
+                Owner Passcode
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  type="password"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  placeholder="Enter owner password..."
+                  className="salon-input mt-0"
+                />
+                <KeyRound className="w-4 h-4 text-stone-400 absolute right-3 top-3.5" />
+              </div>
+            </div>
+
+            {authError && (
+              <p className="text-xs font-semibold text-red-600">
+                Incorrect passcode. Please try again.
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-[#1C1917] hover:bg-stone-800 text-white font-medium text-sm rounded-full transition-all shadow-xs"
+            >
+              Unlock Owner Portal
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-stone-200 text-[11px] text-stone-500">
+            <span>Passcode: <code className="bg-stone-200 px-1.5 py-0.5 rounded text-[#1C1917]">hairmasters2026</code></span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* Authenticated Owner Portal */
   return (
     <div className="mx-auto max-w-5xl px-6 py-16 bg-background space-y-10">
       
@@ -91,8 +178,8 @@ export default function AdminPage() {
       <div className="border-b border-stone-300 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-rose font-semibold text-xs uppercase tracking-widest">
-            <Shield className="w-4 h-4" />
-            <span>Salon Owner Portal</span>
+            <Lock className="w-4 h-4" />
+            <span>Authenticated Owner Portal</span>
           </div>
           <h1 className="mt-1 font-serif text-3xl sm:text-5xl text-[#1C1917] font-normal">
             Manage Salon Services
@@ -110,6 +197,7 @@ export default function AdminPage() {
             <Plus className="w-4 h-4 text-rose" />
             <span>{showAddForm ? 'Close Form' : 'Add New Service'}</span>
           </button>
+
           <button
             onClick={handleReset}
             className="flex items-center gap-1 px-3 py-2 text-xs font-semibold text-stone-600 hover:text-red-600 border border-stone-300 rounded-full hover:border-red-300"
@@ -118,10 +206,19 @@ export default function AdminPage() {
             <RotateCcw className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Reset Defaults</span>
           </button>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-colors"
+            title="Lock Portal"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Lock / Logout</span>
+          </button>
         </div>
       </div>
 
-      {/* Success Notification Banner */}
+      {/* Success Notification */}
       {message && (
         <div className="p-4 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-sm font-semibold flex items-center gap-2 animate-fadeIn">
           <Check className="w-5 h-5 text-emerald-700" />
@@ -221,7 +318,7 @@ export default function AdminPage() {
         </form>
       )}
 
-      {/* Services List Manager Table/Cards */}
+      {/* Current Services List */}
       <div className="space-y-4">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-[#1C1917]">
           Current Salon Menu ({services.length} Items)
@@ -234,7 +331,6 @@ export default function AdminPage() {
               className="bg-card p-6 rounded-2xl border border-stone-300 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               {editingId === svc.id ? (
-                /* Edit Inline Form */
                 <div className="w-full space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <input
@@ -279,7 +375,6 @@ export default function AdminPage() {
                   </div>
                 </div>
               ) : (
-                /* Normal Display View */
                 <>
                   <div className="space-y-1 max-w-2xl">
                     <div className="flex items-center gap-3">
