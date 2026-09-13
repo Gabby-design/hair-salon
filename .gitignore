@@ -1,0 +1,15 @@
+# Node dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Local env & logs
+*.log
+.env
+.env.local
+.DS_Store
+
+# Scratch files
+scratch*

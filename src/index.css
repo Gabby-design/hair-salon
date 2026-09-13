@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-[#1C1917] font-sans antialiased selection:bg-rose/20 selection:text-[#1C1917];
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-normal text-[#1C1917];
+  }
+
+  p, li, dt, dd, label, input, textarea, select {
+    @apply text-[#1C1917];
+  }
+}
+
+@layer components {
+  .salon-input {
+    @apply mt-1.5 w-full rounded-lg bg-card/90 px-4 py-3 text-sm text-[#1C1917] font-medium ring-1 ring-ink/20 transition-all focus:bg-background focus:outline-none focus:ring-2 focus:ring-rose/80 placeholder:text-ink-soft/70;
+  }
+
+  .salon-shadow {
+    box-shadow: 0 20px 40px -15px rgba(28, 25, 23, 0.12);
+  }
+
+  .card-float {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  
+  .card-float:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px -12px rgba(28, 25, 23, 0.16);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FBF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 138, 128, 0.5);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C88A80;
+}
