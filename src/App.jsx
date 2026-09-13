@@ -27,8 +27,8 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <ToastContainer
-        position="top-right"
-        autoClose={4000}
+        position="top-center"
+        autoClose={3500}
         hideProgressBar={false}
         newestOnTop
         closeOnClick

@@ -35,6 +35,34 @@
   }
 }
 
+/* Custom Toastify Salon Styling */
+.Toastify__toast-container--top-center {
+  top: 1.5rem;
+  width: auto;
+  max-width: 90vw;
+}
+
+.Toastify__toast {
+  background-color: #FDFBF8 !important;
+  color: #1C1917 !important;
+  border: 1px solid rgba(200, 138, 128, 0.6) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 20px 40px -12px rgba(28, 25, 23, 0.18) !important;
+  padding: 1rem 1.25rem !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+.Toastify__toast-icon {
+  width: 22px !important;
+}
+
+.Toastify__progress-bar {
+  background: linear-gradient(to right, #C88A80, #1C1917) !important;
+  height: 3px !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
